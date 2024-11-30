@@ -1,0 +1,13 @@
+select orders.created_at, prod.name, brand, category, department, num_of_item, prod.cost, sale_price, dist.name, items.status
+from `bigquery-public-data.thelook_ecommerce.users` as user
+left join `bigquery-public-data.thelook_ecommerce.order_items` as items
+on user.id = items.user_id
+inner join `bigquery-public-data.thelook_ecommerce.products` as prod
+on items.product_id = prod.id  and prod.retail_price = items.sale_price
+inner join `bigquery-public-data.thelook_ecommerce.inventory_items` as invent
+on invent.product_id = items.product_id and items.inventory_item_id = invent.id and invent.product_category = prod.category and 
+invent.product_brand = prod.brand and items.inventory_item_id = invent.id and prod.cost = invent.cost
+inner join `bigquery-public-data.thelook_ecommerce.orders` as orders
+on orders.order_id = items.order_id  and orders.user_id = user.id 
+inner join`bigquery-public-data.thelook_ecommerce.distribution_centers` as dist
+on dist.id = prod.distribution_center_id
